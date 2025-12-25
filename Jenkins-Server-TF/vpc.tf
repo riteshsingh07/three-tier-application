@@ -1,12 +1,43 @@
+data "aws_availability_zones" "available" {
+    state = "available"
+}
+
 resource "aws_vpc" "vpc" {
   cidr_block = "10.0.0.0/16"
-
+  instance_tenancy = "default"
+  enable_dns_support = true
+  enable_dns_hostnames = true
   tags = {
     Name = var.vpc-name
   }
 }
 
-resource "aws_internet_gateway" "igw" {
+resource "aws_subnet" "public" {
+  count = 2
+  vpc_id = aws_vpc.vpc.id
+  cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index)
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+  map_public_ip_on_launch = true
+
+  tags = {
+        Name= "three_public_subnet_${count.index}"
+    }
+}
+
+
+resource "aws_subnet" "private" {
+  count = 2
+  vpc_id = aws_vpc.vpc.id
+  cidr_block = cidrsubnet(aws_vpc.vpc.cidr_block, 8, count.index+10)
+  availability_zone = data.aws_availability_zones.available.names[count.index]
+
+  tags = {
+        Name = "three_private_subnet_${count.index}"
+  }
+}
+
+
+resource "aws_internet_gateway" "aws_ig" {
   vpc_id = aws_vpc.vpc.id
 
   tags = {
@@ -14,60 +45,19 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-resource "aws_subnet" "public-subnet" {
-  vpc_id                  = aws_vpc.vpc.id
-  cidr_block              = "10.0.1.0/24"
-  availability_zone       = "us-east-1a"
-  map_public_ip_on_launch = true
-
-  tags = {
-    Name = var.subnet-name
-  }
-}
-
-resource "aws_route_table" "rt" {
-  vpc_id = aws_vpc.vpc.id
-  route {
-    cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw.id
-  }
-
-  tags = {
-    Name = var.rt-name
-  }
-}
-
-resource "aws_route_table_association" "rt-association" {
-  route_table_id = aws_route_table.rt.id
-  subnet_id      = aws_subnet.public-subnet.id
-}
-
-resource "aws_security_group" "security-group" {
-  vpc_id      = aws_vpc.vpc.id
-  description = "Allowing Jenkins, Sonarqube, SSH Access"
-
-  ingress = [
-    for port in [22, 8080, 9000, 9090, 80] : {
-      description      = "TLS from VPC"
-      from_port        = port
-      to_port          = port
-      protocol         = "tcp"
-      ipv6_cidr_blocks = ["::/0"]
-      self             = false
-      prefix_list_ids  = []
-      security_groups  = []
-      cidr_blocks      = ["0.0.0.0/0"]
+resource "aws_route_table" "route_table" {
+    vpc_id = aws_vpc.vpc.id
+    route {
+        cidr_block= "0.0.0.0/0"
+        gateway_id= aws_internet_gateway.aws_ig.id
     }
-  ]
+    tags = {
+        Name = var.rt-name
+    }
+}
 
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
-  tags = {
-    Name = var.sg-name
-  }
+resource "aws_route_table_association" "aws_rt_asso" {
+    count=2
+    subnet_id = aws_subnet.public[count.index].id
+    route_table_id = aws_route_table.route_table.id 
 }
