@@ -43,7 +43,7 @@ systemctl start docker
 # docker run -d -p 8080:8080 -p 50000:50000 --name jenkins-container jenkins/jenkins:lts
 
 # Run Docker Container of Sonarqube
-# docker run -d  --name sonar -p 9000:9000 sonarqube:lts-community
+# docker run -itd  --name sonarqube -p 9000:9000 sonarqube:lts-community
 
 
 # Installing AWS CLI
