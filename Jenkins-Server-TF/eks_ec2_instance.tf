@@ -1,6 +1,4 @@
-
-
-resource "aws_instance" "ec2_agent_instance" {
+resource "aws_instance" "eks_ec2_instance" {
     ami = "ami-02b8269d5e85954ef"
     instance_type = "m7i-flex.large"
     key_name= aws_key_pair.ec2_key.key_name 
@@ -9,7 +7,7 @@ resource "aws_instance" "ec2_agent_instance" {
     iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
     associate_public_ip_address = true 
 
-    user_data = file("install.sh")
+    user_data = file("eks_install.sh")
 
     root_block_device {
         volume_size = 15
@@ -17,6 +15,6 @@ resource "aws_instance" "ec2_agent_instance" {
     }
 
     tags = {
-        Name= "three_jenkins_agent"
+        Name= "three_tier_eks_server"
     }
 }
