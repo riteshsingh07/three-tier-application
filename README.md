@@ -30,8 +30,7 @@ The `Kubernetes-Manifests-Files` directory holds Kubernetes manifests for deploy
 🛠️ **Tools Explored:**
 - Terraform & AWS CLI for AWS infrastructure
 - Jenkins, Sonarqube, Terraform, Kubectl, and more for CI/CD setup
-- Helm, Prometheus, and Grafana for Monitoring
-- ArgoCD for GitOps practices
+- Prometheus, and Grafana for Monitoring
 
 🚢 **High-Level Overview:**
 - IAM User setup & Terraform magic on AWS
@@ -39,7 +38,7 @@ The `Kubernetes-Manifests-Files` directory holds Kubernetes manifests for deploy
 - EKS Cluster creation & Load Balancer configuration
 - Private ECR repositories for secure image management
 - Helm charts for efficient monitoring setup
-- GitOps with ArgoCD - the cherry on top!
+
 
 
 ### Step 1: IAM Configuration
@@ -91,7 +90,7 @@ kubectl get nodes
 
 ### Step 8: Run Manifests
 ``` shell
-kubectl create namespace workshop
+kubectl create namespace three-tier
 kubectl apply -f .
 kubectl delete -f .
 ```
