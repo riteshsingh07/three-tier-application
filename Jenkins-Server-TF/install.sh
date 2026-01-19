@@ -17,9 +17,8 @@ apt-get install -y \
 # For Ubuntu 22.04
 # Intsalling Java
 apt update -y
-apt install openjdk-17-jre -y
-apt install openjdk-17-jdk -y
-java --version
+apt install -y openjdk-21-jdk
+java -version
 
 # Installing Jenkins
 # curl -fsSL https://pkg.jenkins.io/debian/jenkins.io-2023.key | sudo tee \
@@ -33,7 +32,7 @@ java --version
 # Installing Docker 
 apt update
 apt install docker.io -y
-usermod -aG docker jenkins
+usermod -aG docker ubuntu
 
 # Enable and start Docker
 systemctl enable docker
@@ -43,7 +42,7 @@ systemctl start docker
 # docker run -d -p 8080:8080 -p 50000:50000 --name jenkins-container jenkins/jenkins:lts
 
 # Run Docker Container of Sonarqube
-# docker run -itd  --name sonarqube -p 9000:9000 sonarqube:lts-community
+docker run -itd  --name sonarqube -p 9000:9000 sonarqube:lts-community
 
 
 # Installing AWS CLI

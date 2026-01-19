@@ -4,10 +4,10 @@ pipeline {
     
     environment {
         SONAR_HOME = tool "SonarQube"
-        AWS_ACCOUNT_ID = "705307574472"
+        AWS_ACCOUNT_ID = "280224704185"
         AWS_ECR_REPO_NAME = "backend_ecr"
         AWS_DEFAULT_REGION = 'ap-south-1'
-        REPOSITORY_URI = "705307574472.dkr.ecr.ap-south-1.amazonaws.com"
+        REPOSITORY_URI = "280224704185.dkr.ecr.ap-south-1.amazonaws.com"
     }
     
     stages {

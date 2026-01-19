@@ -17,9 +17,8 @@ apt-get install -y \
 # For Ubuntu 22.04
 # Intsalling Java
 apt update -y
-apt install openjdk-17-jre -y
-apt install openjdk-17-jdk -y
-java --version
+apt install -y openjdk-21-jdk
+java -version
 
 # Installing AWS CLI
 curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
